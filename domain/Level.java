@@ -1,4 +1,4 @@
-package SkillSwap.domain;
+package domain;
 
 public enum Level {
     BEGINNER(1),

@@ -1,4 +1,4 @@
-package SkillSwap.service;
+package service;
 import java.util.*;
 
 class Offer {

@@ -1,6 +1,4 @@
-package SkillSwap.service;
-
-
+package service;
 
 public class ReviewService {
     public void addReview(String exchangeId, String reviewerId, int stars, String comment) {

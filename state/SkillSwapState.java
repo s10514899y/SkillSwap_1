@@ -1,11 +1,7 @@
-package SkillSwap.state;
+package state;
 
+import domain.*;
 import java.util.*;
-
-import SkillSwap.domain.Offer;
-import SkillSwap.domain.Request;
-import SkillSwap.domain.Skill;
-import SkillSwap.domain.Student;
 
 public class SkillSwapState {
     public Map<String, Student> students = new HashMap<>();

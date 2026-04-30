@@ -1,12 +1,8 @@
-package SkillSwap.app;
+package app;
 
-import SkillSwap.domain.Level;
-import SkillSwap.domain.Offer;
-import SkillSwap.domain.Request;
-import SkillSwap.domain.Skill;
-import SkillSwap.domain.Student;
-import SkillSwap.state.SkillSwapState;
+import domain.*;
 import java.util.Scanner;
+import state.SkillSwapState;
 
 public class Main {
     public static void main(String[] args) {

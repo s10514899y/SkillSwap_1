@@ -1,4 +1,4 @@
-package SkillSwap.service;
+package service;
 
 public enum Status {
         PROPOSED,

@@ -1,4 +1,4 @@
-package SkillSwap.domain;
+package domain;
 
 public class Request {
     private String id;

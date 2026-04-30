@@ -1,4 +1,5 @@
-package SkillSwap.domain;
+package domain;
+
 public class Score {
     private int score;
 
