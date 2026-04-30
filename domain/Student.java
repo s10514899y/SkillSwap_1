@@ -8,6 +8,22 @@ public class Student {
     private double ratingAvg;
     private int ratingCount;
 
+    public double getRatingAvg() {
+        return ratingAvg;
+    }
+
+    public void setRatingAvg(double ratingAvg) {
+        this.ratingAvg = ratingAvg;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
+
     public Student(String id, String name, String schoolClass, String email) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Nome non valido");
