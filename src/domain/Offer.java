@@ -1,6 +1,8 @@
 package domain;
 
-    public class Offer {
+import resources.*;
+
+public class Offer {
     private String id;
     private Student student;
     private Skill skill;

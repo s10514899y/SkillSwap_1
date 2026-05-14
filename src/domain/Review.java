@@ -20,4 +20,16 @@ public class Review {
         this.stars = stars;
         this.comment = comment;
     }
+
+    public String getId() { return id; }
+    public Exchange getExchange() { return exchange; }
+    public Student getReviewer() { return reviewer; }
+    public Student getReviewee() { return reviewee; }
+    public int getStars() { return stars; }
+    public String getComment() { return comment; }
+
+    @Override
+    public String toString() {
+        return id + " - " + reviewer.getName() + " -> " + reviewee.getName() + " (" + stars + " stelle)";
+    }
 }

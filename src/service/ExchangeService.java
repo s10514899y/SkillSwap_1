@@ -1,5 +1,7 @@
 package service;
 
+import resources.Status;
+
 public class ExchangeService {
     private String offer;
     private String request;

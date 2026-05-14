@@ -1,4 +1,4 @@
-package service;
+package resources;
 
 public enum Status {
         PROPOSED,
@@ -6,4 +6,3 @@ public enum Status {
         COMPLETED,
         CANCELLED
        }
-

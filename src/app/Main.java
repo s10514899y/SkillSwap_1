@@ -2,89 +2,33 @@ package app;
 
 import domain.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.DateTimeException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-import state.SkillSwapState;
+import resources.Level;
+import resources.NextID;
+import storage.SkillSwapState;
+import storage.FileStorage;
 
 public class Main {
+    private static int nextStudentID = 1;
+    private static int nextOfferID = 1;
+    private static int nextRequestID = 1;
+
+    private static final Map<String, Runnable> comandi = new HashMap<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         SkillSwapState state = new SkillSwapState();
+        FileStorage.aggiungiDaCSV(state);
 
-        Path studentsPath = Path.of("data", "students.csv");
-        Path skillsPath = Path.of("data", "skills.csv");
-        Path offersPath = Path.of("data", "offers.csv");
-        Path requestsPath = Path.of("data", "requests.csv");
-        Path exchangesPath = Path.of("data", "exchanges.csv");
-        Path reviewsPath = Path.of("data", "reviews.csv");
-
-        try (
-            BufferedReader brStudents = Files.newBufferedReader(studentsPath);
-            BufferedReader brSkills = Files.newBufferedReader(skillsPath);
-            BufferedReader brOffers = Files.newBufferedReader(offersPath);
-            BufferedReader brRequests = Files.newBufferedReader(requestsPath);
-            BufferedReader brExchanges = Files.newBufferedReader(exchangesPath);
-            BufferedReader brReviews = Files.newBufferedReader(reviewsPath)
-        ) {
-            String riga;
-            while((riga = brStudents.readLine()) != null) {
-                try {
-                    state.addStudent(riga);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                } 
-            }
-
-            while((riga = brSkills.readLine()) != null) {
-                try {
-                    state.addSkill(riga);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            while((riga = brOffers.readLine()) != null) {
-                try {
-                    state.addOffer(riga);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            while((riga = brRequests.readLine()) != null) {
-                try {
-                    state.addRequest(riga);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            while((riga = brExchanges.readLine()) != null) {
-                try {
-                    state.addExchanges(riga);
-                } catch(IllegalArgumentException | DateTimeException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            while((riga = brReviews.readLine()) != null) {
-                try {
-                    state.addReview(riga);
-                } catch(NumberFormatException | DateTimeException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        nextStudentID = NextID.initNextStudentID(state.getStudents());
+        nextOfferID = NextID.initNextOfferID(state.getOffers());
+        nextRequestID = NextID.initNextRequestID(state.getRequests());
 
         // Skill predefinite
-        state.skills.put("K1", new Skill("K1", "Programmazione C", "SUBJECT"));
-        state.skills.put("K2", new Skill("K2", "Matematica", "SUBJECT"));
+        state.addSkill(new Skill("K1", "Programmazione C", "SUBJECT"));
+        state.addSkill(new Skill("K2", "Matematica", "SUBJECT"));
 
         while (true) {
             System.out.println("\n=== SkillSwap ===");
@@ -110,9 +54,8 @@ public class Main {
 
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
-
-                    Student s = new Student(id, nome, classe, email);
-                    state.students.put(id, s);
+                    
+                    state.students.addStudent(new Student(id, nome, classe, email, 0.0, 0));
                     break;
 
                 case 2:

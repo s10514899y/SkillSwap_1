@@ -4,7 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 public final class ParserUtils {
-    public static  Status parseStatus(String s) throws IllegalArgumentException {
+    public static Status parseStatus(String s) throws IllegalArgumentException {
         return Status.valueOf(s);
     }
 
