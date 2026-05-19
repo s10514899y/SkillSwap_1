@@ -24,6 +24,17 @@ public class Student {
         this.ratingCount = ratingCount;
     }
 
+    public String formattaCSV() {
+        return new StringBuilder()
+            .append(id).append(";")
+            .append(name).append(";")
+            .append(schoolClass).append(";")
+            .append(email).append(";")
+            .append(ratingAvg).append(";")
+            .append(ratingCount)
+            .toString();
+    }
+
     public String getId() { return id; }
     public String getName() { return name; }
     public String getSchoolClass() { return schoolClass; }

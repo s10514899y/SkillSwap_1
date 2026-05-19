@@ -1,14 +1,14 @@
 package app;
 
 import domain.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import resources.Category;
 import resources.Level;
 import resources.NextID;
-import storage.SkillSwapState;
 import storage.FileStorage;
+import storage.SkillSwapState;
 
 public class Main {
     private static int nextStudentID = 1;
@@ -16,19 +16,24 @@ public class Main {
     private static int nextRequestID = 1;
 
     private static final Map<String, Runnable> comandi = new HashMap<>();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final SkillSwapState state = new SkillSwapState();
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        SkillSwapState state = new SkillSwapState();
-        FileStorage.aggiungiDaCSV(state);
+        FileStorage.caricaCSV(state);
 
         nextStudentID = NextID.initNextStudentID(state.getStudents());
         nextOfferID = NextID.initNextOfferID(state.getOffers());
         nextRequestID = NextID.initNextRequestID(state.getRequests());
 
         // Skill predefinite
-        state.addSkill(new Skill("K1", "Programmazione C", "SUBJECT"));
-        state.addSkill(new Skill("K2", "Matematica", "SUBJECT"));
+        state.addSkill(new Skill("K1", "Programmazione C", Category.SUBJECT));
+        state.addSkill(new Skill("K2", "Matematica", Category.SUBJECT));
+
+        comandi.put("1", Main::createStudent);
+        comandi.put("2", Main::addOffer);
+        comandi.put("3", Main::addRequest);
+        comandi.put("4", Main::printList);
 
         while (true) {
             System.out.println("\n=== SkillSwap ===");
@@ -36,87 +41,93 @@ public class Main {
             System.out.println("2. Aggiungi offer");
             System.out.println("3. Aggiungi request");
             System.out.println("4. Lista offer e request");
-            System.out.println("0. Esci");
+            System.out.println("0. Esci\n");
 
-            int scelta = scanner.nextInt();
-            scanner.nextLine();
+            System.out.print("> ");
+            String input = scanner.nextLine().trim();
+            String[] parts = input.split(" ");
+            String cmd = parts[0];
 
-            switch (scelta) {
-                case 1:
-                    System.out.print("ID: ");
-                    String id = scanner.nextLine();
-
-                    System.out.print("Nome: ");
-                    String nome = scanner.nextLine();
-
-                    System.out.print("Classe: ");
-                    String classe = scanner.nextLine();
-
-                    System.out.print("Email: ");
-                    String email = scanner.nextLine();
-                    
-                    state.students.addStudent(new Student(id, nome, classe, email, 0.0, 0));
-                    break;
-
-                case 2:
-                    System.out.print("ID Offer: ");
-                    String oid = scanner.nextLine();
-
-                    System.out.print("Student ID: ");
-                    String sid = scanner.nextLine();
-
-                    System.out.print("Skill ID: ");
-                    String skid = scanner.nextLine();
-
-                    Student stud = state.students.get(sid);
-                    Skill skill = state.skills.get(skid);
-
-                    if (stud == null || skill == null) {
-                        System.out.println("Errore: studente o skill non trovati");
-                        break;
-                    }
-
-                    Offer o = new Offer(oid, stud, skill, Level.BEGINNER, "");
-                    state.offers.put(oid, o);
-                    break;
-
-                case 3:
-                    System.out.print("ID Request: ");
-                    String rid = scanner.nextLine();
-
-                    System.out.print("Student ID: ");
-                    String rsid = scanner.nextLine();
-
-                    System.out.print("Skill ID: ");
-                    String rskid = scanner.nextLine();
-
-                    Student rstud = state.students.get(rsid);
-                    Skill rskill = state.skills.get(rskid);
-
-                    if (rstud == null || rskill == null) {
-                        System.out.println("Errore: studente o skill non trovati");
-                        break;
-                    }
-
-                    Request r = new Request(rid, rstud, rskill, "BASE", "");
-                    state.requests.put(rid, r);
-                    break;
-
-                case 4:
-                    System.out.println("\nOFFERS:");
-                    for (Offer off : state.offers.values()) {
-                        System.out.println(off);
-                    }
-
-                    System.out.println("\nREQUESTS:");
-                    for (Request req : state.requests.values()) {
-                        System.out.println(req);
-                    }
-                    break;
-
-                case 0:
-                    return;
+            if (cmd.equals('0')) {
+                break;
             }
+
+            if (comandi.containsKey(cmd)) {
+                comandi.get(cmd).run();
+            } else {
+                System.out.println("Comando sconosciuto");
+            }
+        }
+        
+        FileStorage.salvaCSV(state);
+    }
+
+    private static void createStudent() {
+        String id = "S" + nextStudentID;
+
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Classe: ");
+        String classe = scanner.nextLine();
+
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        
+        state.addStudent(new Student(id, nome, classe, email, 0.0, 0));
+    } 
+
+    private static void addOffer() {
+        String id = "O" + nextOfferID;
+
+        System.out.print("Student ID: ");
+        String sid = scanner.nextLine();
+
+        System.out.print("Skill ID: ");
+        String skid = scanner.nextLine();
+
+        Student stud = state.getStudents().get(sid);
+        Skill skill = state.getSkills().get(skid);
+
+        if (stud == null || skill == null) {
+            System.out.println("Errore: studente o skill non trovati");
+            return;
+        }
+
+        Offer o = new Offer(id, stud, skill, Level.BEGINNER, "", true);
+        state.addOffer(o);
+    }
+
+    private static void addRequest() {
+        String id = "R" + nextRequestID;
+
+        System.out.print("Student ID: ");
+        String rsid = scanner.nextLine();
+
+        System.out.print("Skill ID: ");
+        String rskid = scanner.nextLine();
+
+        Student rstud = state.getStudents().get(rsid);
+        Skill rskill = state.getSkills().get(rskid);
+
+        if (rstud == null || rskill == null) {
+            System.out.println("Errore: studente o skill non trovati");
+            return;
+        }
+
+        Request r = new Request(id, rstud, rskill, Level.BEGINNER, "");
+        state.addRequest(r);
+    }
+
+    private static void printList() {
+        System.out.println("\nOFFERS:");
+        for (Offer off : state.getOffers().values()) {
+            System.out.println(off);
+        }
+
+        System.out.println("\nREQUESTS:");
+        for (Request req : state.getRequests().values()) {
+            System.out.println(req);
         }
     }
 }

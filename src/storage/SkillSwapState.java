@@ -2,6 +2,7 @@ package storage;
 
 import domain.*;
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.*;
 import resources.Category;
 import resources.Level;
@@ -37,7 +38,7 @@ public class SkillSwapState {
         if (dati.length == 3) {
             Category category = ParserUtils.parseCategory(dati[2]);
         
-            Skill sk = new Skill(dati[0], dati[1], category.name());
+            Skill sk = new Skill(dati[0], dati[1], category);
             skills.put(sk.getId(), sk);
         } else {
             System.out.println("Dati insufficienti: " + st);
@@ -61,7 +62,7 @@ public class SkillSwapState {
                 return;
             }
             
-            Offer o = new Offer(dati[0], s, sk, level, dati[1]);
+            Offer o = new Offer(dati[0], s, sk, level, dati[1], active);
             offers.put(o.getId(), o);
         } else {
             System.out.println("Dati insufficienti: " + st);
@@ -84,7 +85,7 @@ public class SkillSwapState {
                 return;
             }
             
-            Request r = new Request(dati[0], s, sk, level.name(), dati[4]);
+            Request r = new Request(dati[0], s, sk, level, dati[4]);
             requests.put(r.getId(), r);
         } else {
             System.out.println("Dati insufficienti: " + st);
@@ -106,7 +107,7 @@ public class SkillSwapState {
                 return;
             }
 
-            Exchange ex = new Exchange(dati[0], o, r);
+            Exchange ex = new Exchange(dati[0], o, r, LocalDateTime.now());
             exchanges.put(ex.getId(), ex);
         } else {
             System.out.println("Dati insufficienti: " + st);
@@ -131,7 +132,7 @@ public class SkillSwapState {
 
             int stars = (int) ParserUtils.parseStars(dati[4]);
             
-            Review rv = new Review(dati[0], ex, s1, s2, stars, dati[5]); 
+            Review rv = new Review(dati[0], ex, s1, s2, stars, dati[5], LocalDateTime.now()); 
             reviews.put(rv.getId(), rv);
         } else {
             System.out.println("Dati insufficienti: " + st);

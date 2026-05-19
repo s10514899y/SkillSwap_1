@@ -10,13 +10,24 @@ public class Offer {
     private String note;
     private boolean active;
 
-    public Offer(String id, Student student, Skill skill, Level level, String note) {
+    public Offer(String id, Student student, Skill skill, Level level, String note, boolean  active) {
         this.id = id;
         this.student = student;
         this.skill = skill;
         this.level = level;
         this.note = note;
-        this.active = true;
+        this.active = active;
+    }
+
+    public String formattaCSV() {
+        return new StringBuilder()
+            .append(id).append(";")
+            .append(student.getId()).append(";")
+            .append(skill.getId()).append(";")
+            .append(level).append(";")
+            .append(note).append(";")
+            .append(active)
+            .toString();
     }
 
     public Level getLevel() { return level; }

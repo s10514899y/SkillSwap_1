@@ -1,18 +1,30 @@
 package domain;
 
+import resources.Level;
+
 public class Request {
     private String id;
     private Student student;
     private Skill skill;
-    private String minLevel;
+    private Level minLevel;
     private String note;
 
-    public Request(String id, Student student, Skill skill, String minLevel, String note) {
+    public Request(String id, Student student, Skill skill, Level minLevel, String note) {
         this.id = id;
         this.student = student;
         this.skill = skill;
         this.minLevel = minLevel;
         this.note = note;
+    }
+
+    public String formattaCSV() {
+        return new StringBuilder()
+            .append(id).append(";")
+            .append(student.getId()).append(";")
+            .append(skill.getId()).append(";")
+            .append(minLevel).append(";")
+            .append(note)
+            .toString();
     }
 
     public String getId() { return id; }
