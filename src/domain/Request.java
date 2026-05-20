@@ -27,12 +27,15 @@ public class Request {
             .toString();
     }
 
-    public String getId() { return id; }
-    public Student getStudent() { return student; }
-    public Skill getSkill() { return skill; }
+    public String getId()         { return id; }
+    public Student getStudent()   { return student; }
+    public Skill getSkill()       { return skill; }
+    public Level getMinLevel()    { return minLevel; }
+    public String getNote()       { return note; }
 
     @Override
     public String toString() {
-        return id + " - " + student.getName() + " cerca " + skill.getName();
+        return id + " - " + student.getName() + " cerca " + skill.getName() +
+            " [min: " + minLevel + "]";
     }
 }

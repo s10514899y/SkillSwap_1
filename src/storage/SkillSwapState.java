@@ -7,6 +7,7 @@ import java.util.*;
 import resources.Category;
 import resources.Level;
 import resources.ParserUtils;
+import resources.Status;
 
 public class SkillSwapState {
     private Map<String, Student> students = new HashMap<>();
@@ -17,153 +18,108 @@ public class SkillSwapState {
     private Map<String, Review> reviews = new HashMap<>();
 
     public void addStudent(String st) throws NumberFormatException {
-        String[] dati = st.split(";");
-        if (dati.length == 6) {
-            double avgRating = ParserUtils.parseAvgRating(dati[4]);
-            int ratingCount = ParserUtils.parseRatingcount(dati[5]);
-   
-            Student s = new Student(dati[0], dati[1], dati[2], dati[3], avgRating, ratingCount);
-            students.put(s.getId(), s);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
-    }
-
-    public void addStudent(Student s) {
+        if (st.startsWith("student_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 6) { System.out.println("Student: dati insufficienti: " + st); return; }
+        double avg   = ParserUtils.parseAvgRating(dati[4]);
+        int    count = ParserUtils.parseRatingCount(dati[5]);
+        Student s = new Student(dati[0], dati[1], dati[2], dati[3], avg, count);
         students.put(s.getId(), s);
     }
 
+    public void addStudent(Student s) { students.put(s.getId(), s); }
+
     public void addSkill(String st) throws IllegalArgumentException {
-        String[] dati = st.split(";");
-        if (dati.length == 3) {
-            Category category = ParserUtils.parseCategory(dati[2]);
-        
-            Skill sk = new Skill(dati[0], dati[1], category);
-            skills.put(sk.getId(), sk);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
+        if (st.startsWith("skill_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 3) { System.out.println("Skill: dati insufficienti: " + st); return; }
+        Category category = ParserUtils.parseCategory(dati[2]);
+        Skill sk = new Skill(dati[0], dati[1], category);
+        skills.put(sk.getId(), sk);
     }
 
-    public void addSkill(Skill k) {
-        skills.put(k.getId(), k);
-    }
+    public void addSkill(Skill k) { skills.put(k.getId(), k); }
 
     public void addOffer(String st) throws IllegalArgumentException {
-        String[] dati = st.split(";");
-        if (dati.length == 6) {
-            Level level = ParserUtils.parseLevel(dati[2]);
-            boolean active = ParserUtils.parseActive(dati[3]);
-            Student s = students.get(dati[4]);
-            Skill sk = skills.get(dati[5]);
-
-            if(s == null || sk == null) {
-                System.out.println("Student o skill non trovato: " + st);
-                return;
-            }
-            
-            Offer o = new Offer(dati[0], s, sk, level, dati[1], active);
-            offers.put(o.getId(), o);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
-    }
-
-    public void addOffer(Offer o) {
+        if (st.startsWith("offer_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 6) { System.out.println("Offer: dati insufficienti: " + st); return; }
+ 
+        Student s  = students.get(dati[1]);
+        Skill   sk = skills.get(dati[2]);
+        if (s == null || sk == null) { System.out.println("Offer: student o skill non trovato: " + st); return; }
+ 
+        Level   level  = ParserUtils.parseLevel(dati[3]);
+        String  note   = dati[4];
+        boolean active = ParserUtils.parseActive(dati[5]);
+ 
+        Offer o = new Offer(dati[0], s, sk, level, note, active);
         offers.put(o.getId(), o);
     }
 
-    public void addRequest(String st) throws IllegalArgumentException {
-        String[] dati = st.split(";");
-        if (dati.length == 5) {
-            Student s = students.get(dati[1]);
-            Skill sk = skills.get(dati[2]);
-            Level level = ParserUtils.parseLevel(dati[3]);
+    public void addOffer(Offer o) { offers.put(o.getId(), o); }
 
-            if(s == null || sk == null) {
-                System.out.println("Student o skill non trovato: " + st);
-                return;
-            }
-            
-            Request r = new Request(dati[0], s, sk, level, dati[4]);
-            requests.put(r.getId(), r);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
-    }
-
-    public void addRequest(Request r) {
+    public void addRequest(String st) {
+        if (st.startsWith("request_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 5) { System.out.println("Request: dati insufficienti: " + st); return; }
+ 
+        Student s  = students.get(dati[1]);
+        Skill   sk = skills.get(dati[2]);
+        if (s == null || sk == null) { System.out.println("Request: student o skill non trovato: " + st); return; }
+ 
+        Level level = ParserUtils.parseLevel(dati[3]);
+        Request r = new Request(dati[0], s, sk, level, dati[4]);
         requests.put(r.getId(), r);
     }
 
-    public void addExchanges(String st) throws IllegalArgumentException, DateTimeException {
-        String[] dati = st.split(";");
-        if (dati.length == 4) {
-            Offer o = offers.get(dati[1]);
-            Request r = requests.get(dati[2]);
+    public void addRequest(Request r) { requests.put(r.getId(), r); }
 
-            if(o == null || r == null) {
-                System.out.println("Offer o request non trovato: " + st);
-                return;
-            }
-
-            Exchange ex = new Exchange(dati[0], o, r, LocalDateTime.now());
-            exchanges.put(ex.getId(), ex);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
+    public void addExchange(String st) throws IllegalArgumentException, DateTimeException {
+        if (st.startsWith("exchange_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 6) { System.out.println("Exchange: dati insufficienti: " + st); return; }
+ 
+        Offer   o = offers.get(dati[1]);
+        Request r = requests.get(dati[2]);
+        if (o == null || r == null) { System.out.println("Exchange: offer o request non trovato: " + st); return; }
+ 
+        Status        status    = ParserUtils.parseStatus(dati[3]);
+        LocalDateTime createdAt = ParserUtils.parseLocalDate(dati[4]);
+        LocalDateTime closedAt  = (dati.length > 5 && !dati[5].isBlank())
+                                  ? ParserUtils.parseLocalDate(dati[5]) : null;
+ 
+        Exchange ex = new Exchange(dati[0], o, r, createdAt);
+        ex.setStatus(status);
+        ex.setClosedAt(closedAt);
+        exchanges.put(ex.getId(), ex);
     }
 
-    public void addExchange(Exchange e) {
-        exchanges.put(e.getId(), e);
-    }
+    public void addExchange(Exchange e) { exchanges.put(e.getId(), e); }
 
     public void addReview(String st) throws NumberFormatException, DateTimeException {
-        String[] dati = st.split(";");
-        if (dati.length >= 6) {
-            Exchange ex = exchanges.get(dati[1]);
-            Student s1 = students.get(dati[2]);
-            Student s2 = students.get(dati[3]);
-
-            if(ex == null || s1 == null || s2 == null) {
-                System.out.println("Exchange o student non trovato: " + st);
-                return;
-            }
-
-            int stars = (int) ParserUtils.parseStars(dati[4]);
-            
-            Review rv = new Review(dati[0], ex, s1, s2, stars, dati[5], LocalDateTime.now()); 
-            reviews.put(rv.getId(), rv);
-        } else {
-            System.out.println("Dati insufficienti: " + st);
-        }
+        if (st.startsWith("review_id")) return;
+        String[] dati = st.split(";", -1);
+        if (dati.length < 7) { System.out.println("Review: dati insufficienti: " + st); return; }
+ 
+        Exchange ex = exchanges.get(dati[1]);
+        Student  s1 = students.get(dati[2]);
+        Student  s2 = students.get(dati[3]);
+        if (ex == null || s1 == null || s2 == null) { System.out.println("Review: entità non trovata: " + st); return; }
+ 
+        int           stars     = ParserUtils.parseStars(dati[4]);
+        LocalDateTime createdAt = ParserUtils.parseLocalDate(dati[6]);
+ 
+        Review rv = new Review(dati[0], ex, s1, s2, stars, dati[5], createdAt);
+        reviews.put(rv.getId(), rv);
     }
 
-    public void addReview(Review v) {
-        reviews.put(v.getId(), v);
-    }
+    public void addReview(Review v) { reviews.put(v.getId(), v); }
 
-    public Map<String, Student> getStudents() {
-        return students;
-    }
-
-    public Map<String, Skill> getSkills() {
-        return skills;
-    }
-
-    public Map<String, Offer> getOffers() {
-        return offers;
-    }
-
-    public Map<String, Request> getRequests() {
-        return requests;
-    }
-
-    public Map<String, Exchange> getExchanges() {
-        return exchanges;
-    }
-
-    public Map<String, Review> getReviews() {
-        return reviews;
-    }
+    public Map<String, Student> getStudents()   { return students; }
+    public Map<String, Skill> getSkills()       { return skills; }
+    public Map<String, Offer> getOffers()       { return offers; }
+    public Map<String, Request> getRequests()   { return requests; }
+    public Map<String, Exchange> getExchanges() { return exchanges; }
+    public Map<String, Review> getReviews()     { return reviews; }
 }

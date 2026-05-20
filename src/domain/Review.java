@@ -37,16 +37,17 @@ public class Review {
             .toString();
     }
 
-    public String getId() { return id; }
-    public Exchange getExchange() { return exchange; }
-    public Student getReviewer() { return reviewer; }
-    public Student getReviewee() { return reviewee; }
-    public int getStars() { return stars; }
-    public String getComment() { return comment; }
+    public String getId()               { return id; }
+    public Exchange getExchange()       { return exchange; }
+    public Student getReviewer()        { return reviewer; }
+    public Student getReviewee()        { return reviewee; }
+    public int getStars()               { return stars; }
+    public String getComment()          { return comment; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
     @Override
     public String toString() {
-        return id + " - " + reviewer.getName() + " -> " + reviewee.getName() + " (" + stars + " stelle)";
+        return id + " - " + reviewer.getName() + " -> " + reviewee.getName() +
+            " (" + stars + " stelle): " + comment;
     }
 }

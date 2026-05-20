@@ -1,6 +1,6 @@
 package domain;
 
-import resources.*;
+import resources.Level;
 
 public class Offer {
     private String id;
@@ -10,7 +10,7 @@ public class Offer {
     private String note;
     private boolean active;
 
-    public Offer(String id, Student student, Skill skill, Level level, String note, boolean  active) {
+    public Offer(String id, Student student, Skill skill, Level level, String note, boolean active) {
         this.id = id;
         this.student = student;
         this.skill = skill;
@@ -30,13 +30,17 @@ public class Offer {
             .toString();
     }
 
-    public Level getLevel() { return level; }
-    public String getId() { return id; }
-    public Student getStudent() { return student; }
-    public Skill getSkill() { return skill; }
+    public String getId()        { return id; }
+    public Student getStudent()  { return student; }
+    public Skill getSkill()      { return skill; }
+    public Level getLevel()      { return level; }
+    public String getNote()      { return note; }
+    public boolean isActive()    { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
     @Override
     public String toString() {
-        return id + " - " + student.getName() + " offre " + skill.getName();
+        return id + " - " + student.getName() + " offre " + skill.getName() +
+            " [" + level + "]" + (active ? "" : " (inattiva)");
     }
 }

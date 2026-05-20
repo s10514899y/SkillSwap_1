@@ -1,91 +1,100 @@
 package service;
+ 
+import domain.MatchResult;
+import domain.Offer;
+import domain.Request;
 import java.util.*;
 
-class Offer {
-    String offerId;
-    String studentId;
-    String skill;
-    String level;
-    String className;
-}
-
-class Request {
-    String requestId;
-    String studentId;
-    String skill;
-    String level;
-    String className;
-}
-
-class MatchResult {
-    String offerId;
-    String requestId;
-    int score;
-    String reason;
-
-    public MatchResult(String offerId, String requestId, int score, String reason) {
-        this.offerId = offerId;
-        this.requestId = requestId;
-        this.score = score;
-        this.reason = reason;
-    }
-}
-
 public class MatchingService {
-
-    private final String studentId;
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public MatchingService(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public List<MatchResult> findOneWayMatches(List<Offer> offers, List<Request> requests) {
+ 
+    public List<MatchResult> findOneWayMatches(String studentId,
+                                               Collection<Offer>   allOffers,
+                                               Collection<Request> allRequests) {
         List<MatchResult> results = new ArrayList<>();
-        for (Offer offer : offers) {
-            if (offer.studentId.equals(studentId)) continue;
-            for (Request request : requests) {
-                if (request.studentId.equals(studentId)) continue;
+ 
+        List<Request> myRequests = allRequests.stream()
+            .filter(r -> r.getStudent().getId().equals(studentId))
+            .toList();
+ 
+        for (Request myRequest : myRequests) {
+            for (Offer offer : allOffers) {
+                if (offer.getStudent().getId().equals(studentId)) continue;
+                if (!offer.isActive()) continue;
+ 
                 int score = 0;
                 List<String> reasons = new ArrayList<>();
-                if (offer.skill.equals(request.skill)) {
+ 
+                if (offer.getSkill().getId().equals(myRequest.getSkill().getId())) {
                     score += 3;
-                    reasons.add("Skill uguale");
+                    reasons.add("skill uguale");
                 }
-                if (isLevelSufficient(offer.level, request.level)) {
+                if (offer.getLevel().isSufficient(myRequest.getMinLevel())) {
                     score += 2;
-                    reasons.add("Livello sufficiente");
+                    reasons.add("livello sufficiente");
                 }
-                if (offer.className.equals(request.className)) {
+                if (offer.getStudent().getSchoolClass().equals(myRequest.getStudent().getSchoolClass())) {
                     score += 1;
-                    reasons.add("Stessa classe");
+                    reasons.add("stessa classe");
                 }
+ 
                 if (score > 0) {
                     results.add(new MatchResult(
-                        offer.offerId,
-                        request.requestId,
+                        offer.getId(),
+                        myRequest.getId(),
                         score,
                         String.join(", ", reasons)
                     ));
                 }
             }
         }
+ 
+        results.sort(Comparator.comparingInt(MatchResult::getScore).reversed());
         return results;
     }
+ 
+    public List<MatchResult> findSwapMatches(String studentId,
+                                             Collection<Offer>   allOffers,
+                                             Collection<Request> allRequests) {
+        List<MatchResult> results = new ArrayList<>();
+ 
+        List<Offer> myOffers = allOffers.stream()
+            .filter(o -> o.getStudent().getId().equals(studentId) && o.isActive())
+            .toList();
+        List<Request> myRequests = allRequests.stream()
+            .filter(r -> r.getStudent().getId().equals(studentId))
+            .toList();
+ 
+        for (Offer myOffer : myOffers) {
+            for (Request myRequest : myRequests) {
+                for (Offer theirOffer : allOffers) {
+                    String theirId = theirOffer.getStudent().getId();
+                    if (theirId.equals(studentId)) continue;
+                    if (!theirOffer.isActive()) continue;
+                    if (!theirOffer.getSkill().getId().equals(myRequest.getSkill().getId())) continue;
+                    if (!theirOffer.getLevel().isSufficient(myRequest.getMinLevel())) continue;
 
-    private boolean isLevelSufficient(String offerLevel, String requestLevel) {
-        if (offerLevel.equals("Avanzato") && requestLevel.equals("Base")) return true;
-        return offerLevel.equals(requestLevel);
-    }
-
-        public void findSwipeMatches(List<Offer> offers, List<Request> requests) {
-                List<MatchResult> results = findOneWayMatches(offers, requests);
-                results.sort((a, b) -> Integer.compare(b.score, a.score));
-                for (MatchResult result : results) {
-                    System.out.println("Offerta " + result.offerId + " - Richiesta " + result.requestId + ": Score " + result.score + " (" + result.reason + ")");
+                    boolean theyWantMySkill = allRequests.stream()
+                        .anyMatch(r -> r.getStudent().getId().equals(theirId)
+                                    && r.getSkill().getId().equals(myOffer.getSkill().getId())
+                                    && myOffer.getLevel().isSufficient(r.getMinLevel()));
+ 
+                    if (theyWantMySkill) {
+                        int score = 6;
+                        if (myOffer.getStudent().getSchoolClass()
+                                .equals(theirOffer.getStudent().getSchoolClass())) score += 1;
+ 
+                        results.add(new MatchResult(
+                            theirOffer.getId(),
+                            myRequest.getId(),
+                            score,
+                            "swap reciproco"
+                        ));
+                    }
                 }
+            }
         }
+ 
+        results.sort(Comparator.comparingInt(MatchResult::getScore).reversed());
+        return results;
     }
+}

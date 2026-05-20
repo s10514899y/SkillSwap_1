@@ -11,13 +11,16 @@ public class Exchange {
     private LocalDateTime createdAt;
     private LocalDateTime closedAt;
 
-    public Exchange(String id, Offer offer, Request request, LocalDateTime createdAt) {
+    public Exchange(String id, Offer offer, Request request, LocalDateTime createdAt) { //FIXME: status nel costruttore
         this.id = id;
         this.offer = offer;
         this.request = request;
         this.status = Status.PROPOSED;
         this.createdAt = createdAt;
+        this.closedAt = null;
     }
+
+    //TODO: secondo costruttore nel caso ricevesse un closedAt
 
     public String formattaCSV() {
         return new StringBuilder()
@@ -30,16 +33,17 @@ public class Exchange {
             .toString();
     }
 
-    public String getId() { return id; }
-    public Offer getOffer() { return offer; }
-    public Request getRequest() { return request; }
-    public Status getStatus() { return status; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getClosedAt() { return closedAt; }
+    public String getId()                 { return id; }
+    public Offer getOffer()               { return offer; }
+    public Request getRequest()           { return request; }
+    public Status getStatus()             { return status; }
+    public LocalDateTime getCreatedAt()   { return createdAt; }
+    public LocalDateTime getClosedAt()    { return closedAt; }
+    public void setStatus(Status status)  { this.status = status; }
     public void setClosedAt(LocalDateTime closedAt) { this.closedAt = closedAt; }
 
     @Override
     public String toString() {
-        return id + " - " + offer + " <-> " + request;
+        return id + " [" + status + "] " + offer.getId() + " <-> " + request.getId();
     }
 }

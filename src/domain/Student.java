@@ -35,13 +35,21 @@ public class Student {
             .toString();
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getSchoolClass() { return schoolClass; }
-    public String getEmail() { return email; }
+    public void addRating(int stars) {
+        ratingCount++;
+        ratingAvg = ((ratingAvg * (ratingCount - 1)) + stars) / ratingCount;
+    }
+
+    public String getId()           { return id; }
+    public String getName()         { return name; }
+    public String getSchoolClass()  { return schoolClass; }
+    public String getEmail()        { return email; }
+    public double getRatingAvg()    { return ratingAvg; }
+    public int getRatingCount()     { return ratingCount; }
 
     @Override
     public String toString() {
-        return id + " - " + name + " (" + schoolClass + ")";
+        return id + " - " + name + " (" + schoolClass + ") | rating: " +
+            String.format("%.1f", ratingAvg) + " (" + ratingCount + " voti)";
     }
 }

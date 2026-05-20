@@ -14,19 +14,19 @@ public class Skill {
     }
 
     public String formattaCSV() {
-        return new StringBuffer()
+        return new StringBuilder()
             .append(id).append(";")
             .append(name).append(";")
             .append(category)
             .toString();
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public Category getCategory() { return category; }
+    public String getId()           { return id; }
+    public String getName()         { return name; }
+    public Category getCategory()   { return category; }
 
     @Override
     public String toString() {
-        return id + " - " + name;
+        return id + " - " + name + " [" + category + "]";
     }
 }
