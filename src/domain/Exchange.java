@@ -11,7 +11,7 @@ public class Exchange {
     private LocalDateTime createdAt;
     private LocalDateTime closedAt;
 
-    public Exchange(String id, Offer offer, Request request, LocalDateTime createdAt) { //FIXME: status nel costruttore
+    public Exchange(String id, Offer offer, Request request, LocalDateTime createdAt) {
         this.id = id;
         this.offer = offer;
         this.request = request;
@@ -19,8 +19,6 @@ public class Exchange {
         this.createdAt = createdAt;
         this.closedAt = null;
     }
-
-    //TODO: secondo costruttore nel caso ricevesse un closedAt
 
     public String formattaCSV() {
         return new StringBuilder()

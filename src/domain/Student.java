@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.regex.Pattern;
+
 public class Student {
     private String id;
     private String name;
@@ -8,12 +10,21 @@ public class Student {
     private double ratingAvg;
     private int ratingCount;
 
+    private static final Pattern EMAIL_PATTERN =
+           Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+
+    private static final Pattern CLASS_PATTERN =
+           Pattern.compile("^[1-5][A-Z]{1,3}$"); 
+
     public Student(String id, String name, String schoolClass, String email, double ratingAvg, int ratingCount) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Nome non valido");
         }
-        if (email == null || email.isEmpty()) {
+        if (email == null || email.isEmpty() || !isValidEmail(email)) {
             throw new IllegalArgumentException("Email non valida");
+        }
+        if (!isValidClass(schoolClass)) {
+            throw new IllegalArgumentException("Classe non valida");
         }
 
         this.id = id;
@@ -38,6 +49,14 @@ public class Student {
     public void addRating(int stars) {
         ratingCount++;
         ratingAvg = ((ratingAvg * (ratingCount - 1)) + stars) / ratingCount;
+    }
+
+    private boolean isValidEmail(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    private boolean isValidClass(String studentClass) {
+        return studentClass != null && CLASS_PATTERN.matcher(studentClass).matches();
     }
 
     public String getId()           { return id; }

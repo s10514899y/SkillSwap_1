@@ -6,7 +6,7 @@ import java.nio.file.*;
  
 public final class FileStorage {
  
-    private static final Path DATA_DIR      = Path.of("data");
+    private static final Path DATA_DIR      = Path.of("../data");
     private static final Path studentsPath  = DATA_DIR.resolve("students.csv");
     private static final Path skillsPath    = DATA_DIR.resolve("skills.csv");
     private static final Path offersPath    = DATA_DIR.resolve("offers.csv");
