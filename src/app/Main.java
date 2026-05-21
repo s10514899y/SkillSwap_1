@@ -54,7 +54,7 @@ public class Main {
 
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
-                    
+                     
                     state.students.addStudent(new Student(id, nome, classe, email, 0.0, 0));
                     break;
 
