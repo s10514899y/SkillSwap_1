@@ -1,5 +1,9 @@
 package resources;
-
+ 
 public enum Category {
-    SUBJECT
+    SUBJECT,
+    SPORT,
+    ART,
+    LANGUAGE,
+    OTHER
 }

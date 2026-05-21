@@ -24,13 +24,32 @@ public class Student {
         this.ratingCount = ratingCount;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getSchoolClass() { return schoolClass; }
-    public String getEmail() { return email; }
+    public String formattaCSV() {
+        return new StringBuilder()
+            .append(id).append(";")
+            .append(name).append(";")
+            .append(schoolClass).append(";")
+            .append(email).append(";")
+            .append(ratingAvg).append(";")
+            .append(ratingCount)
+            .toString();
+    }
+
+    public void addRating(int stars) {
+        ratingCount++;
+        ratingAvg = ((ratingAvg * (ratingCount - 1)) + stars) / ratingCount;
+    }
+
+    public String getId()           { return id; }
+    public String getName()         { return name; }
+    public String getSchoolClass()  { return schoolClass; }
+    public String getEmail()        { return email; }
+    public double getRatingAvg()    { return ratingAvg; }
+    public int getRatingCount()     { return ratingCount; }
 
     @Override
     public String toString() {
-        return id + " - " + name + " (" + schoolClass + ")";
+        return id + " - " + name + " (" + schoolClass + ") | rating: " +
+            String.format("%.1f", ratingAvg) + " (" + ratingCount + " voti)";
     }
 }

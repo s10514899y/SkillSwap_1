@@ -1,8 +1,8 @@
 package resources;
-
+ 
 public enum Status {
-        PROPOSED,
-        ACCEPTED,
-        COMPLETED,
-        CANCELLED
-       }
+    PROPOSED,
+    ACCEPTED,
+    COMPLETED,
+    CANCELLED
+}

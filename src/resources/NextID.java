@@ -1,66 +1,43 @@
 package resources;
 
-import java.util.Map;
-
+import domain.Exchange;
 import domain.Offer;
 import domain.Request;
+import domain.Review;
 import domain.Student;
+import java.util.Map;
 
 public final class NextID {
     public static int initNextStudentID(Map<String, Student> students) {
-        int max = 0;
-
-        for (String id : students.keySet()) {
-            if (id.startsWith("S")) {
-                try {
-                    int num = Integer.parseInt(id.substring(1));
-                    if (num > max) {
-                        max = num;
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignora ID malformati
-                }
-            }
-        }
-
-        return max + 1;
+        return maxNum(students.keySet(), "S") + 1;
     }
-    
+ 
     public static int initNextOfferID(Map<String, Offer> offers) {
-        int max = 0;
-
-        for (String ID : offers.keySet()) {
-            if (ID.startsWith("S")) {
-                try {
-                    int num = Integer.parseInt(ID.substring(1));
-                    if (num > max) {
-                        max = num;
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignora ID malformati
-                }
-            }
-        }
-
-        return max + 1;
+        return maxNum(offers.keySet(), "O") + 1;
     }
-
+ 
     public static int initNextRequestID(Map<String, Request> requests) {
+        return maxNum(requests.keySet(), "R") + 1;
+    }
+ 
+    public static int initNextExchangeID(Map<String, Exchange> exchanges) {
+        return maxNum(exchanges.keySet(), "E") + 1;
+    }
+ 
+    public static int initNextReviewID(Map<String, Review> reviews) {
+        return maxNum(reviews.keySet(), "V") + 1;
+    }
+ 
+    private static int maxNum(Iterable<String> keys, String prefisso) {
         int max = 0;
-
-        for (String ID : requests.keySet()) {
-            if (ID.startsWith("S")) {
+        for (String id : keys) {
+            if (id.startsWith(prefisso)) {
                 try {
-                    int num = Integer.parseInt(ID.substring(1));
-                    if (num > max) {
-                        max = num;
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignora ID malformati
-                }
+                    int num = Integer.parseInt(id.substring(prefisso.length()));
+                    if (num > max) max = num;
+                } catch (NumberFormatException E) {}
             }
         }
-
-        return max + 1;
+        return max;
     }
 }
