@@ -1,6 +1,6 @@
 ---
 
-# 🎯 1. Introduzione 
+# 1. Introduzione 
 Il progetto **SkillSwap** è un'applicazione sviluppata in Java che permette lo **scambio di competenze tra studenti**.
 
 L'idea principale è quella di simulare una piattaforma in cui gli utenti possono: 
@@ -14,7 +14,7 @@ Il sistema è stato progettato seguendo una struttura modulare per separare resp
 
 ---
 
-# 🌐 2. Architettura del sistema 
+# 2. Architettura del sistema 
 Il progetto segue una **architettura a livelli (leyered architecture)**:
 
 APP > SERVICE > DOMAIN > STATE 
@@ -23,7 +23,7 @@ APP > SERVICE > DOMAIN > STATE
 
 ---
 
-## 🔷 APP (Presentation Layer)
+## APP (Presentation Layer)
 
 Responsabile di:
 - interazione con l'utente 
@@ -31,103 +31,103 @@ Responsabile di:
 - stampa su console (terminale)
 - visualizzazione dei risultati 
 
-👉 E' il livello più esterno del sistema.
+ E' il livello più esterno del sistema.
 
 ---
 
-## 🔷 DOMAIN (Model Layer)
+## DOMAIN (Model Layer)
 Contiene: 
 - entità principali del sistema 
 - regole base del dominio 
 - struttura dati fondamentale 
 
-👉 Rappresenta il "cuore" dei dati.
+ Rappresenta il "cuore" dei dati.
 
 ---
 
-## 🔷 SERVICE (Business Logic Layer)
+## SERVICE (Business Logic Layer)
 Contiene:
 - logica di business
 - algoritmi di matching 
 - gestione stati degli scambi 
 - sistema di review 
 
-👉 E' il livello più "intelligente".
+ E' il livello più "intelligente".
 
 ---
 
-## 🔷 STATE (Persistence Layer in-memory)
+## STATE (Persistence Layer in-memory)
 Contiene: 
 - dati in memoria (HashMap)
 - studenti, offerte, richieste, skill
 
-👉 Simula un database. 
+ Simula un database. 
 
 ---
 
-# 📦 3. PACKAGE APP
+# 3. PACKAGE APP
 
 ---
 
-## 🖨️ Classe *ConsoleReportPrinter* 
+## Classe *ConsoleReportPrinter* 
 
-### 🎯 Ruolo 
+### Ruolo 
 Classe responsabile della **visualizzazione dei dati su console**. 
 
-### 🧠 Funzionamento 
+### Funzionamento 
 Questa classe non contiene logica di business, ma si occupa solo di presentare i dati in modo leggibile. 
 
 ---
 
-### 👤 *printStudentProfile*
+### *printStudentProfile*
 Stampa il profilo di uno studente:
 - nome 
 - email 
 - lista offerte
 - lista richieste 
 
-👉 Serve per visualizzare lo stato completo di un studente.
+ Serve per visualizzare lo stato completo di un studente.
 
 ---
 
-### 🤝 *printMatches*
+### *printMatches*
 Mostra i match tra offerte e richieste.
 
-👉 Evidenzia le corrispondenze tra utenti. 
+ Evidenzia le corrispondenze tra utenti. 
 
 ---
 
-### 🔄 *printExchangeDetails*
+### *printExchangeDetails*
 Mostra i dettagli di uno scambio: 
 - offerta 
 - richiesta 
 - stato 
 
-👉 Utile per tracciare il ciclo di vita di uno scambio. 
+ Utile per tracciare il ciclo di vita di uno scambio. 
 
 ---
 
-### 🏆 *printLeaderBoard* 
+### *printLeaderBoard* 
 Stampa la classifica studenti basata sugli scambi effettuati. 
 
-👉 Introduce un sistema competitivo tra utenti.
+ Introduce un sistema competitivo tra utenti.
 
 ---
 
-## 🧠 Classe *Main* 
-### 🎯 Ruolo 
+## Classe *Main* 
+### Ruolo 
 E' il **punto di ingresso dell'applicazione**. 
 
 ---
 
-### ⚙️ Funzionamento
+### Funzionamento
 - utilizza *Scanner* per input 
 - mantiene uno stato globale (*SkillSwapState*)
 - esegue un ciclo infinito con menu
 
 ---
 
-### 📝 Menu 
+### Menu 
 
 1. Creazione studente 
 2. Aggiunta offer 
@@ -137,7 +137,7 @@ E' il **punto di ingresso dell'applicazione**.
 
 ---
 
-### 🧠 Spiegazione logica 
+### Spiegazione logica 
 
 Il *Main*: 
 - raccoglie input
@@ -147,15 +147,15 @@ Il *Main*:
 
 ---
 
-# 📦 4. PACKAGE DOMAIN 
+# 4. PACKAGE DOMAIN 
 
 ---
 
-## 👤 Classe *Student* 
-### 🎯 Ruolo 
+## Classe *Student* 
+### Ruolo 
 Rappresenta uno studente del sistema. 
 
-### 📌 Attributi: 
+### Attributi: 
 - id 
 - name
 - schoolClass
@@ -163,87 +163,87 @@ Rappresenta uno studente del sistema.
 - ratingAvg 
 - ratingCount
 
-### ⚠️ Validazioni: 
+### Validazioni: 
 - nome non vuoto 
 - email non vuota
 
-👉 Garantisce integrità dei dati. 
+ Garantisce integrità dei dati. 
 
 ---
 
-## 📚 Classe *Skill* 
+## Classe *Skill* 
 Rappresenta una competenza. 
 - id 
 - name
 - category
 
-👉 Usata per offerte e richieste. 
+ Usata per offerte e richieste. 
 
 --- 
 
-## 📤 Classe *Offer* 
+## Classe *Offer* 
 Rappresenta una competenza offerta da uno studente. 
 - studente proprietario
 - skill associata 
 - livello 
 - stato attivo 
 
-👉 Definisce cosa un utente poù imparare. 
+ Definisce cosa un utente poù imparare. 
 
 ---
 
-## 📥 Classe *Request* 
+##  Classe *Request* 
 Rappresenta una richiesta di apprendimento. 
 
-👉 Definisce cosa uno studente vuole imparare. 
+ Definisce cosa uno studente vuole imparare. 
 
 --- 
 
-## 🔄 Classe *Exchange* 
+## Classe *Exchange* 
 Rappreenta uno scambio tra offer e request. 
 
-### 📌 Stati:
+### Stati:
 - PROPOSED 
 - ACCEPTED
 - COMPLETED
 - CANCELLED 
 
-👉 Simula il ciclo di vita di uno scambio. 
+ Simula il ciclo di vita di uno scambio. 
 
 ---
 
-## ⭐ Classe *Review* 
+## Classe *Review* 
 Sistema di valutazione tra utenti. 
 
-### ⚠️ Regola:
+### Regola:
 - stelle da 1 a 5
 
-👉 Garantisce qualità del feedback.
+ Garantisce qualità del feedback.
 
 ---
 
-## 💯 Classe *Score* 
+## Classe *Score* 
 Gestisce punteggi numerici. 
 - implementa equals/hashCode
 - utile per confronti
 
 ---
-## 📊 Enum *Level* 
+## Enum *Level* 
 Definisce livelli di competenza: 
 - BEGINNER (1)
 - INTERMEDIATE (2)
 - ADVANCED (3)
 
-### ⚙️ Metodo 
+### Metodo 
 - confronto tra livelli (*isSufficient*)
 
 ---
 
-# ⚙️ 5. PACKAGE SERVICE
+# 5. PACKAGE SERVICE
 
 ---
 
-### 📌 Stati: 
+### Stati: 
 - PROPOSED 
 - ACCEPTED
 - COMPLETED
@@ -251,51 +251,51 @@ Definisce livelli di competenza:
 
 ---
 
-### ⚙️ Regole: 
+### Regole: 
 - non si può accettare senza proposta 
 - non si pù completare senza accettazione 
 - non si possono usare valori nulli 
 
-👉 Garantisce consistenza dello stato. 
+ Garantisce consistenza dello stato. 
 
-## 🔍 Classe *MatchingService* 
-### 🎯 Ruolo
+## Classe *MatchingService* 
+### Ruolo
 Calcola la compatiblità tra utenti. 
 
 --- 
 
-### 💯 Algoritmo di scoring: 
+### Algoritmo di scoring: 
 - skill uguale +3
 - livello compatibile +2 
 - stessa classe +1 
 
-👉 Più alto il punteggio, migliore il match. 
+ Più alto il punteggio, migliore il match. 
 
 ---
 
-## ⭐ Classe *ReviewService*
-### 🎯 Ruolo 
+## Classe *ReviewService*
+### Ruolo 
 Gestisce le recensioni. 
 
 ---
 
-### ⚠️ Validazioni: 
+### Validazioni: 
 - stelle tra 1 e 5 
 - commento non vuoto 
 
-👉 Evita dati incoerenti. 
+ Evita dati incoerenti. 
 
 ---
 
-## 🗃️ Database (simulato)
+## Database (simulato)
 - salva recensioni in memoria
 - calcola media rating per exchange 
 
-👉 Simula un database reale. 
+ Simula un database reale. 
 
 ---
 
-## 📊 Enum *Status*
+## Enum *Status*
 Stati dello scambio:
 - PROPSED 
 - ACCEPTED
@@ -303,49 +303,43 @@ Stati dello scambio:
 - CANCELLED
 
 ---
-## 🧠 6. PACKAGE STATE
+## 6. PACKAGE STATE
 
 ---
 
-## 🧠 Classe `SkillSwapState`
+## Classe `SkillSwapState`
 
-### 🎯 Ruolo
+### Ruolo
 
 Contenitore centrale dei dati.
 
 ---
 
-### 📌 Struttura:
+### Struttura:
 
 - students
-
 - skills
-
 - offers
-
 - requests
-
+  
 ---
 
-### ⚙️ Implementazione:
+### Implementazione:
 
 Utilizza `HashMap` per accesso O(1).
 
 ---
 
-### 🧠 Spiegazione
+### Spiegazione
 
 Questo componente funge da:
-
 - memoria dell’applicazione
-
 - alternativa a un database
-
 - punto centrale di sincronizzazione dati
 
 ---
 
-# 🔄 7. FLUSSO DEL SISTEMA
+# 7. FLUSSO DEL SISTEMA
 
 1. L’utente interagisce con `Main`
 
@@ -359,42 +353,31 @@ Questo componente funge da:
 
 ---
 
-# 🎯 8. OBIETTIVO DEL PROGETTO
+# 8. OBIETTIVO DEL PROGETTO
 
 Il sistema SkillSwap permette:
-
 - scambio di competenze tra studenti
-
 - gestione offerte e richieste
-
 - matching automatico
-
 - sistema di reputazione
 
 ---
 
-# 🚀 9. CONSIDERAZIONI FINALI
+# 9. CONSIDERAZIONI FINALI
 
-## ✔ Punti di forza:
-
+##  Punti di forza:
 - architettura modulare
-
 - separazione delle responsabilità
-
 - codice estendibile
 
-## ⚠ Possibili miglioramenti:
-
+## Possibili miglioramenti:
 - database reale
-
 - API REST
-
 - interfaccia grafica
-
 - algoritmo di matching avanzato
 
 ---
 
-# 🏁 CONCLUSIONE
+# CONCLUSIONE
 
 Il progetto SkillSwap rappresenta una simulazione completa di una piattaforma di scambio competenze, sviluppata con una chiara separazione tra dati, logica e interfaccia, garantendo modularità e scalabilità.
