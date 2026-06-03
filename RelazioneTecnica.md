@@ -1,5 +1,3 @@
----
-
 # 1. Introduzione 
 Il progetto **SkillSwap** è un'applicazione sviluppata in Java che permette lo **scambio di competenze tra studenti**.
 
